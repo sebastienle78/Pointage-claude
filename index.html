@@ -3,46 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Pointage Pro</title> 
+<title>Mon Relevé d'Heures</title> 
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root { --bg: #0f0f0f; --surface: #1a1a1a; --surface2: #242424; --border: #2e2e2e; --accent: #d4f53c; --accent2: #ff6b35; --text: #f0f0f0; --muted: #888; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; max-width: 480px; margin: 0 auto; padding-bottom: 100px; }
-  .header { background: var(--surface); padding: 20px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-  .logo { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 15px; }
-  .logo span { color: var(--accent); }
-  .month-nav { display: flex; align-items: center; justify-content: space-between; background: var(--surface2); padding: 10px; border-radius: 12px; }
-  .month-btn { background: none; border: none; color: var(--text); font-size: 20px; cursor: pointer; padding: 0 10px; }
+  .header { background: var(--surface); padding: 20px; border-bottom: 1px solid var(--border); }
+  .month-nav { display: flex; align-items: center; justify-content: space-between; background: var(--surface2); padding: 10px; border-radius: 12px; margin-top: 10px; }
+  .month-btn { background: none; border: none; color: var(--text); font-size: 20px; cursor: pointer; }
   .month-label { font-family: 'Syne'; font-weight: 700; }
-  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 20px; }
-  .stat { background: var(--surface); border: 1px solid var(--border); padding: 12px; border-radius: 12px; text-align: center; }
-  .stat-val { font-family: 'Syne'; font-size: 18px; color: var(--accent); }
-  .stat-label { font-size: 9px; color: var(--muted); text-transform: uppercase; margin-top: 4px; }
-  .view { display: none; padding: 0 20px; }
+  .view { display: none; padding: 20px; }
   .view.active { display: block; }
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 15px; }
   #dateSelector { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; color: var(--accent); font-family: 'Syne'; font-size: 16px; padding: 12px; margin-bottom: 20px; text-align: center; outline: none; }
-  .status-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 20px; }
-  .status-btn { padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface2); color: var(--muted); font-size: 12px; cursor: pointer; }
-  .status-btn.active { background: var(--accent); color: #000; }
   .time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-  .time-input { display: flex; flex-direction: column; gap: 5px; }
-  .time-input label { font-size: 9px; color: var(--muted); }
+  .time-input { display: flex; flex-direction: column; gap: 5px; font-size: 10px; color: var(--muted); }
   .time-input input { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: #fff; padding: 8px; font-family: 'DM Mono'; text-align: center; }
-  .btn-save { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--accent); color: #000; font-family: 'Syne'; font-weight: 800; cursor: pointer; margin-bottom: 10px; }
-  .btn-alt { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface2); color: #fff; font-size: 13px; cursor: pointer; margin-bottom: 10px; }
-  .entry-item { background: var(--surface); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+  .btn-save { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--accent); color: #000; font-family: 'Syne'; font-weight: 800; cursor: pointer; }
+  
+  /* TABLEAU PRO POUR L'IMPRESSION */
+  #printArea { display: none; background: white; color: black; padding: 20px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; color: black; }
+  th, td { border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 12px; }
+  th { background-color: #f2f2f2; font-family: 'Syne'; }
+  .print-header { text-align: center; margin-bottom: 20px; }
+
+  @media print {
+    body * { display: none; }
+    #printArea, #printArea * { display: block; }
+    table, th, td { display: table-cell !important; }
+    table { display: table !important; }
+  }
+  
   .nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: var(--surface); padding: 15px; display: flex; justify-content: space-around; border-top: 1px solid var(--border); }
   .nav-item { background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer; }
   .nav-item.active { color: var(--accent); }
-  @media print { .nav, .header, .month-nav, .status-grid, #dateSelector, .time-grid, .btn-save, .btn-alt { display: none !important; } body { background: white; color: black; } .entry-item { border: 1px solid #ccc; } }
 </style>
 </head>
 <body>
 
+<div id="printArea">
+  <div class="print-header">
+    <h1 id="printMonthTitle">Relevé d'Heures</h1>
+    <p>Document généré le <span id="printToday"></span></p>
+  </div>
+  <table id="tablePointage">
+    <thead>
+      <tr>
+        <th>Jour</th>
+        <th>Statut</th>
+        <th>Total</th>
+        <th>Heures Supp.</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+  <div style="margin-top: 20px; font-weight: bold; text-align: right;" id="printTotals"></div>
+</div>
+
 <div class="header">
-  <div class="logo">Pointage<span>.</span></div>
+  <div style="font-family: 'Syne'; font-weight: 800; font-size: 22px;">Pointage<span>.</span></div>
   <div class="month-nav">
     <button onclick="changeMonth(-1)" class="month-btn">‹</button>
     <div id="monthLabel" class="month-label"></div>
@@ -50,57 +71,30 @@
   </div>
 </div>
 
-<div class="stats">
-  <div class="stat"><div id="statJours" class="stat-val">0</div><div class="stat-label">Jours</div></div>
-  <div class="stat"><div id="statTotal" class="stat-val">0h00</div><div class="stat-label">Total</div></div>
-  <div class="stat"><div id="statSupp" class="stat-val" style="color:var(--accent2)">0h00</div><div class="stat-label">Supp.</div></div>
-</div>
-
 <div class="view active" id="view-saisie">
   <div class="card">
     <input type="date" id="dateSelector">
-    <div class="status-grid">
-      <button onclick="setStatus('travail')" id="btn-travail" class="status-btn active">💼 Travail</button>
-      <button onclick="setStatus('conge')" id="btn-conge" class="status-btn">🏖️ Congé</button>
-    </div>
     <div class="time-grid">
-      <div class="time-input"><label>Arrivée</label><input type="time" id="t1" value="08:00"></div>
-      <div class="time-input"><label>Pause</label><input type="time" id="tp" value="01:00"></div>
-      <div class="time-input"><label>Départ</label><input type="time" id="t2" value="17:00"></div>
+      <div class="time-input"><label>ARRIVÉE</label><input type="time" id="t1" value="08:00"></div>
+      <div class="time-input"><label>PAUSE</label><input type="time" id="tp" value="01:00"></div>
+      <div class="time-input"><label>DÉPART</label><input type="time" id="t2" value="17:00"></div>
     </div>
-    <button class="btn-save" onclick="save()">💾 Enregistrer</button>
+    <button class="btn-save" onclick="save()">💾 Enregistrer la journée</button>
   </div>
-  
-  <div class="card">
-    <button class="btn-alt" onclick="window.print()">🖨️ Imprimer le mois</button>
-    <button class="btn-alt" onclick="exportData()">📤 Partager / Exporter (JSON)</button>
-  </div>
+  <button class="btn-save" style="background:var(--surface2); color:white;" onclick="preparePrint()">🖨️ Générer le tableau PDF</button>
 </div>
 
-<div class="view" id="view-liste"></div>
+<div class="view" id="view-liste" id="listContent">
+    <p style="text-align: center; color: var(--muted);">Les données s'affichent dans le tableau d'impression.</p>
+</div>
 
 <div class="nav">
-  <button onclick="showView('saisie')" id="nav-saisie" class="nav-item active">✏️</button>
-  <button onclick="showView('liste')" id="nav-liste" class="nav-item">📋</button>
+  <button onclick="showView('saisie')" id="nav-saisie" class="nav-item active">✏️ Saisie</button>
+  <button onclick="showView('liste')" id="nav-liste" class="nav-item">📋 Aperçu</button>
 </div>
 
 <script>
 let curDate = new Date();
-let selectedStatus = 'travail';
-
-function showView(v) {
-  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  document.getElementById('view-'+v).classList.add('active');
-  document.getElementById('nav-'+v).classList.add('active');
-  if(v==='liste') renderList();
-}
-
-function setStatus(s) {
-  selectedStatus = s;
-  document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('btn-'+s).classList.add('active');
-}
 
 function changeMonth(v) {
   curDate.setMonth(curDate.getMonth() + v);
@@ -110,12 +104,6 @@ function changeMonth(v) {
 function update() {
   const m = curDate.toLocaleString('fr-fr', {month:'long', year:'numeric'});
   document.getElementById('monthLabel').textContent = m.charAt(0).toUpperCase() + m.slice(1);
-  const data = JSON.parse(localStorage.getItem('pts_'+curDate.getFullYear()+'_'+curDate.getMonth()) || '{}');
-  let j=0, t=0, s=0;
-  Object.values(data).forEach(e => { if(e.total){ j++; t+=e.total; s+=e.supp; }});
-  document.getElementById('statJours').textContent = j;
-  document.getElementById('statTotal').textContent = Math.floor(t/60)+'h'+String(t%60).padStart(2,'0');
-  document.getElementById('statSupp').textContent = Math.floor(s/60)+'h'+String(s%60).padStart(2,'0');
 }
 
 function save() {
@@ -126,28 +114,40 @@ function save() {
   const t2 = document.getElementById('t2').value.split(':').map(Number);
   const tp = document.getElementById('tp').value.split(':').map(Number);
   const total = (t2[0]*60+t2[1]) - (t1[0]*60+t1[1]) - (tp[0]*60+tp[1]);
-  data[d.getDate()] = { total, supp: Math.max(0, total-480), status: selectedStatus };
+  data[d.getDate()] = { total, supp: Math.max(0, total-480), status: 'Travail' };
   localStorage.setItem(key, JSON.stringify(data));
-  alert('Enregistré pour le ' + d.toLocaleDateString());
-  update();
+  alert('Journée enregistrée !');
 }
 
-function renderList() {
-  const data = JSON.parse(localStorage.getItem('pts_'+curDate.getFullYear()+'_'+curDate.getMonth()) || '{}');
-  const cont = document.getElementById('view-liste');
-  const sortedDays = Object.keys(data).sort((a,b) => b-a);
-  cont.innerHTML = sortedDays.map(k => `<div class="entry-item"><b>Jour ${k}</b> <span>${Math.floor(data[k].total/60)}h${String(data[k].total%60).padStart(2,'0')}</span></div>`).join('') || '<p style="text-align:center;padding:20px;color:var(--muted)">Aucune donnée pour ce mois.</p>';
+function preparePrint() {
+  const key = 'pts_'+curDate.getFullYear()+'_'+curDate.getMonth();
+  const data = JSON.parse(localStorage.getItem(key) || '{}');
+  const tbody = document.getElementById('tableBody');
+  const m = curDate.toLocaleString('fr-fr', {month:'long', year:'numeric'});
+  
+  document.getElementById('printMonthTitle').textContent = "Relevé d'Heures - " + m;
+  document.getElementById('printToday').textContent = new Date().toLocaleDateString();
+  
+  tbody.innerHTML = "";
+  let totalMins = 0;
+  let totalSupp = 0;
+
+  Object.keys(data).sort((a,b)=>a-b).forEach(day => {
+    const e = data[day];
+    totalMins += e.total;
+    totalSupp += e.supp;
+    const row = `<tr><td>${day}</td><td>${e.status}</td><td>${Math.floor(e.total/60)}h${String(e.total%60).padStart(2,'0')}</td><td>${Math.floor(e.supp/60)}h${String(e.supp%60).padStart(2,'0')}</td></tr>`;
+    tbody.innerHTML += row;
+  });
+
+  document.getElementById('printTotals').innerHTML = `Total mois : ${Math.floor(totalMins/60)}h${String(totalMins%60).padStart(2,'0')} | Dont Supp : ${Math.floor(totalSupp/60)}h${String(totalSupp%60).padStart(2,'0')}`;
+  
+  window.print();
 }
 
-function exportData() {
-    const data = localStorage.getItem('pts_'+curDate.getFullYear()+'_'+curDate.getMonth());
-    if(!data) return alert("Rien à exporter");
-    const blob = new Blob([data], {type: 'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `pointage_${curDate.getMonth()+1}_${curDate.getFullYear()}.json`;
-    a.click();
+function showView(v) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
 }
 
 document.getElementById('dateSelector').valueAsDate = new Date();
